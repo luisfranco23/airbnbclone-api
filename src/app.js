@@ -99,8 +99,8 @@ app.get("/ejemplo",
   }
 );
 
-app.listen(8000, () => {
-  console.log("Server started at port 8000");
+app.listen(PORT, () => {
+  console.log(`Server started at port 8000${PORT}`);
 });
 
 exports.default = app
