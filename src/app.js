@@ -49,7 +49,7 @@ if(process.env.NODE_ENV === 'production'){
 //? Esta configuracion es para habilitar el req.body
 app.use(express.json());
 
-
+const PORT = process.env.PORT 
 
 // app.get("/", async (req, res) => {
 
