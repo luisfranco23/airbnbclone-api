@@ -2,42 +2,463 @@
     "openapi": "3.0.1",
     "info": {
         "title": "API Rest Clon de Airbnb",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "description": "En esta basado en Airbnb, el objetivo es poner en practica todo el conocimiento adquirido durante el modulo de back-end con Node Js, manejando base de datos con psq y Sequelize, manejo de roles y autenticación con token JWT",
+        "basePath": "v1",
+        "host": "localhost:8000/api/v1"
+    },
+    "tags": [{
+        "name": "auth",
+        "description": "Inicio de sesion y registrarse"
+    },{
+        "name": "users",
+        "description": "Todo sobre usuarios"
+    },
+    {
+        "name": "accommodations",
+        "description": "Todo sobre lugares"
+    },
+    {
+        "name": "reservations",
+        "description": "todo sobre reservaciones"
+    }],
+    "schemes": ["http","https"],
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apikey",
+            "name": "api_key",
+            "in": "header"
+        },
+        "auth": {
+            "type": "jwt",
+            "authorizationUrl": "/auth/login",
+            "flow": "implicit"
+        }
     },
     "paths": {
-        "/api/v1/users": {
+        "/users": {
             "get": {
-                "description": "Obtener todos mis usuarios",
-                "tags": ["Users", "v1"],
+                "tags": ["users"],
+                "sumary": "Obtenemos todos los usuarios",
+                "parameters": [],
+                "produces": ["aplication/json"],
                 "responses": {
                     "200": {
-                        "description": "Obtenemos exitosamente todos los usuarios"
+                        "description": "successful operation",
+                        "content" : {
+                            "application/json": {
+                                "schema" :{
+                                    "type" :"object",
+                                    "properties": {
+                                        "id" : {
+                                            "type" : "string"
+                                        },
+                                        "fistName": {
+                                            "type": "string"
+                                        },
+                                        "lastName": {
+                                            "type" : "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Generamos un error en caso de que la peticion no se resuelva"
+                        "description": "There is no data"
+                    }
+                },
+                "security": [{
+                    "api_key": []
+                }]
+            }
+        },
+        "/users/me/" : {
+            "get" : {
+                "tags":["users"],
+                "sumary": "Obtenemos los datos del usuarios logeado",
+                "parameters" : [{
+                    "in":"token",
+                    "required": "true"
+                }],
+                "produces":["aplication/json"],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content" : {
+                            "application/json": {
+                                "schema" :{
+                                    "type" :"object",
+                                    "properties": {
+                                        "id" : {
+                                            "type" : "string"
+                                        },
+                                        "fistName": {
+                                            "type": "string"
+                                        },
+                                        "lastName": {
+                                            "type" : "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description" : "err"
+                    }
+                },
+                "security":[{
+                    "petstore_auth": ["token:jwt"]
+                    }]
+            },
+            "delete" : {
+                "tags" : ["users"],
+                "sumary" : "Eliminamos nuestro usuario",
+                "parameters":[{
+                    "in": "header",
+                    "name":"api_key",
+                    "required": "true"
+                }],
+                "security":[{
+                    "auth": ["write:token","read:token"]
+                }],
+                "responses":  {
+                    "200":{
+                        "description":"successful operation"
+                    },
+                    "400":{
+                        "description": "failed operation"
+                    }
+                }
+            },
+            "put" : {
+                "tags": ["users"],
+                "consumes": ["aplication/json"],
+                "parameters":[{
+                    "in": "header",
+                    "name": "api_key",
+                    "required":"true"
+                },{
+                    "in":"body",
+                    "name": "body",
+                    "required":"true"
+                }],
+                "security":[{
+                    "auth": ["genetare:token","read:token"]
+                }],
+                "responses":{
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400":{
+                        "description": "failed operation"
                     }
                 }
             }
         },
-        "/api/v1/users/{id}": {
-            "get":{
-                "parameters":[
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID del usuario",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "description": "Obtener todos mis usuarios",
-                "tags": ["Users", "v1"],
+        "/{id}" : {
+            "get" : {
+                "tags":["users"],
+                "sumary": "Obtenemos los datos del usuarios logeado",
+                "parameters" : [{
+                    "in":"token",
+                    "required": "true"
+                }],
+                "produces":["aplication/json"],
                 "responses": {
                     "200": {
-                        "description": "Obtenemos exitosamente todos los usuarios"
+                        "description": "successful operation",
+                        "content" : {
+                            "application/json": {
+                                "schema" :{
+                                    "type" :"object",
+                                    "properties": {
+                                        "id" : {
+                                            "type" : "string"
+                                        },
+                                        "fistName": {
+                                            "type": "string"
+                                        },
+                                        "lastName": {
+                                            "type" : "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Generamos un error en caso de que la peticion no se resuelva"
+                        "description" : "err"
+                    }
+                },
+                "security":[{
+                    "petstore_auth": ["token:jwt"]
+                    }]
+            },
+            "delete" : {
+                "tags" : ["users"],
+                "sumary" : "Eliminamos nuestro usuario",
+                "parameters":[{
+                    "in": "header",
+                    "name":"api_key",
+                    "required": "true"
+                }],
+                "security":[{
+                    "auth": ["write:token","read:token"]
+                }],
+                "responses":  {
+                    "200":{
+                        "description":"successful operation"
+                    },
+                    "400":{
+                        "description": "failed operation"
+                    }
+                }
+            },
+            "put" : {
+                "tags": ["users"],
+                "consumes": ["aplication/json"],
+                "parameters":[{
+                    "in": "header",
+                    "name": "api_key",
+                    "required":"true"
+                },{
+                    "in":"body",
+                    "name": "body",
+                    "required":"true"
+                }],
+                "security":[{
+                    "auth": ["genetare:token","read:token"]
+                }],
+                "responses":{
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400":{
+                        "description": "failed operation"
+                    }
+                }
+            }
+        },
+        "/me/profile-img" : {
+            "post" : {
+                "tags" :["users"],
+                "sumary": "añadimos una nueva imagen al perfil del usuario",
+                "parameters": [{
+                    "in":"header",
+                    "name":"api_key",
+                    "required": "true"
+                }],
+                "security":[{
+                    "auth":["write:token","read:token"]
+                }],
+                "responses":{
+                    "200":{
+                        "description": "successful operation"
+                    },
+                    "400":{
+                        "description":"failed operation"
+                    }
+                }
+            }
+        },
+        "/{id}/role" : {
+            "get" : {
+                "tags" : ["users"],
+                "sumary":"Obtenemos los datos del usuarios logeado y el rol que tiene asignado",
+                "parameters": [{
+                    "in":"header",
+                    "name":"api_key",
+                    "required": "true"
+                }],
+                "security":[{
+                    "auth":["write:token","read:token"]
+                }],
+                "responses":{
+                    "200":{
+                        "description": "successful operation",
+                        "content" : {
+                            "application/json": {
+                                "schema" :{
+                                    "type" :"object",
+                                    "properties": {
+                                        "id" : {
+                                            "type" : "string"
+                                        },
+                                        "fistName": {
+                                            "type": "string"
+                                        },
+                                        "lastName": {
+                                            "type" : "string"
+                                        },
+                                        "role":{
+                                            "name" : {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"failed operation"
+                    }
+                }
+            }
+        },
+        "auth/login": {
+            "post": {
+                "tags": ["auth"],
+                "sumary": "Nos logeamos y obtenemos el token",
+                "parameters": [{
+                    "in":"body",
+                    "name":"body",
+                    "required": "true"
+                }],
+                "responses":{
+                    "200":{
+                        "description": "successful operation",
+                        "content" : {
+                            "application/json": {
+                                "schema" :{
+                                    "type" :"object",
+                                    "properties": {
+                                        "message" : {
+                                            "type" : "string"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"failed operation"
+                    }
+                }
+            }
+        },
+        "auth/register" : {
+            "post" : {
+                "tags" :["auth"],
+                "sumary": "Nos registramos",
+                "parameters": [{
+                    "in":"body",
+                    "name":"body",
+                    "required": "true"
+                }],
+                "responses":{
+                    "200":{
+                        "description": "successful operation"
+                    },
+                    "400":{
+                        "description":"failed operation"
+                    }
+                }
+            }
+        },
+        "/accommodations":{
+            "get":{
+                "tags":["accommodations"],
+                "sumary": "obtenemos todos los lugares",
+                "parameters": [{
+                "in":"header",
+                "name":"api_key",
+                "required": "true"
+            }],
+            "responses":{
+                "200":{
+                    "description": "successful operation",
+                    "content" : {
+                        "application/json": {
+                            "schema" :{
+                                "type" :"object",
+                                "properties": {
+                                    "id" : {
+                                        "type" : "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400":{
+                    "description":"failed operation"
+                }
+            }
+            }
+        },
+        "/accommodations/{id}":{
+            "get":{
+                "tags":["accommodations"],
+                "sumary": "obtenemos lugar por id",
+                "parameters": [{
+                    "in":"header",
+                    "name":"api_key",
+                    "required": "true"
+                }],
+                "responses":{
+                    "200":{
+                        "description": "successful operation",
+                        "content" : {
+                            "application/json": {
+                                "schema" :{
+                                    "type" :"object",
+                                    "properties": {
+                                        "id" : {
+                                            "type" : "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"failed operation"
+                    }
+                }
+            }
+        },
+        "/reservations" : {
+            "get":{
+                "tags": ["reservations"],
+                "sumary": "obtenemos las reservaciones",
+                "parameters": [{
+                    "in":"header",
+                    "name":"api_key",
+                    "required": "true"
+                }],
+                "responses":{
+                    "200":{
+                        "description": "successful operation",
+                        "content" : {
+                            "application/json": {
+                                "schema" :{
+                                    "type" :"object",
+                                    "properties": {
+                                        "id" : {
+                                            "type" : "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description":"failed operation"
                     }
                 }
             }
