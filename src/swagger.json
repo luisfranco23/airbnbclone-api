@@ -4,8 +4,8 @@
         "title": "API Rest Clon de Airbnb",
         "version": "1.0.0",
         "description": "En esta basado en Airbnb, el objetivo es poner en practica todo el conocimiento adquirido durante el modulo de back-end con Node Js, manejando base de datos con psq y Sequelize, manejo de roles y autenticación con token JWT",
-        "basePath": "v1",
-        "host": "localhost:8000/api/v1"
+        "basePath": "api/v1",
+        "host": "/api/v1"
     },
     "tags": [{
         "name": "auth",
