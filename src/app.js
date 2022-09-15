@@ -22,6 +22,7 @@ const {db} = require('./utils/database')
 
 //* Configuraciones iniciales
 const app = express();
+const PORT = process.env.PORT || 8000
 
 initModels()
 
@@ -49,7 +50,6 @@ if(process.env.NODE_ENV === 'production'){
 //? Esta configuracion es para habilitar el req.body
 app.use(express.json());
 
-const PORT = process.env.PORT || 8000
 
 // app.get("/", async (req, res) => {
 
@@ -100,7 +100,7 @@ app.get("/ejemplo",
 );
 
 app.listen(PORT, () => {
-  console.log(`Server started at port 8000${PORT}`);
+  console.log(`Server started at port ${PORT}`);
 });
 
 exports.default = app
